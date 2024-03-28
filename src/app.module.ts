@@ -1,20 +1,15 @@
+// src/app.module.ts
+
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { PagoModule } from './pago/pago.module';
-import { Cuentas } from './pago/entities/pago.entity';
+import { Cuenta,CuentaSchema } from './pago/entities/pago.entity';
 
 @Module({
-  imports: [PagoModule,
-    TypeOrmModule.forRoot({
-      type: 'mysql', 
-      host: 'localhost', 
-      port: 3306, 
-      username: 'root',
-      password: '12345678', 
-      database: 'bd_atotal',
-      entities: [Cuentas],
-      synchronize: true, 
-    }),
+  imports: [
+    PagoModule,
+    MongooseModule.forRoot('mongodb+srv://jojhan24:21DEjunio@cluster0.a4ikckw.mongodb.net/bd_atotal'),
+    MongooseModule.forFeature([{ name: Cuenta.name, schema: CuentaSchema }]),
   ],
 })
 export class AppModule {}

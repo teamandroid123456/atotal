@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
 import { PagoService } from './pago.service';
 import { CreatePagoDto } from './dto/create-pago.dto';
 
@@ -10,13 +10,16 @@ export class PagoController {
   async getCuentasYSaldos() {
     return this.pagoService.getCuentasYSaldos();
   }
+
   @Post()
-  async realizarPago(@Body(ValidationPipe) pagoData: CreatePagoDto) {
+  async realizarPago(@Body() pagoData: CreatePagoDto) {
     try {
       await this.pagoService.realizarPago(pagoData.numeroCuenta, pagoData.monto);
       return { message: 'Pago realizado con éxito' };
     } catch (error) {
-      if (error instanceof NotFoundException) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else if (error.name === 'NotFoundException') {
         throw new HttpException('No se encontró la cuenta especificada.', HttpStatus.INTERNAL_SERVER_ERROR);
       } else if (error.message === 'Saldo insuficiente para realizar el pago.') {
         throw new HttpException('Saldo insuficiente para realizar el pago.', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -25,5 +28,4 @@ export class PagoController {
       }
     }
   }
-
 }

@@ -1,13 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-@Entity()
-export class Cuentas {
-  @PrimaryGeneratedColumn()
-  id: number;
+export type CuentaDocument = Cuenta & Document;
 
-  @Column({ unique: true })
+@Schema()
+export class Cuenta {
+  
+  @Prop({ unique: true })
   numeroCuenta: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Prop({ type: Number })
   saldo: number;
+
+  // Definir campo id
+
 }
+
+export const CuentaSchema = SchemaFactory.createForClass(Cuenta);

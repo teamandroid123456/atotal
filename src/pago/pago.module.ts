@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Cuentas } from './entities/pago.entity';
+import { MongooseModule } from '@nestjs/mongoose';
 import { PagoController } from './pago.controller';
 import { PagoService } from './pago.service';
+import { Cuenta,CuentaSchema } from './entities/pago.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Cuentas])], 
+  imports: [
+    MongooseModule.forFeature([{ name: Cuenta.name, schema: CuentaSchema }]),
+  ],
   controllers: [PagoController],
   providers: [PagoService],
 })
